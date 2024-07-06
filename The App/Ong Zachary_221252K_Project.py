@@ -41,11 +41,8 @@ def hashedpassword(ogpassword):
     # Salt for hashing password
     salt = os.urandom(16)
 
-    # Combine the password with the salt
-    saltedpassword = ogpassword + salt.hex()
-
     # Hash the password with salt
-    hashedpassword = hashlib.pbkdf2_hmac('sha256', saltedpassword.encode('utf-8'), b'', 100)
+    hashedpassword = hashlib.pbkdf2_hmac('sha256', ogpassword.encode('utf-8'), salt, 100)
 
     # Store the salt and hashed password securely
     storedsalt = salt.hex()
@@ -60,10 +57,11 @@ storedsalt, storedhashedpassword = hashedpassword(ogpassword)
 def connect_to_db(username, inputpassword):
     # When connecting to the database, hash the input password with the stored salt
     if inputpassword == ogpassword:
-        # Combine the input password with the stored salt
-        saltedinputpassword = inputpassword + storedsalt
-        inputhashedpassword = hashlib.pbkdf2_hmac('sha256', saltedinputpassword.encode('utf-8'), b'', 100)
-
+        # Convert the stored salt back to bytes
+        salt = bytes.fromhex(storedsalt)
+        # Hash the input password with the stored salt
+        inputhashedpassword = hashlib.pbkdf2_hmac('sha256', inputpassword.encode('utf-8'), salt, 100)
+        # Compare the hashed input password with the stored hashed password
         if inputhashedpassword.hex() == storedhashedpassword:
             connection = mysql.connector.connect(host="localhost", user="root", password="!password", database="ongzachary_221252k_project") # do something to obfuscate this line
             cursor = connection.cursor(buffered=True)
