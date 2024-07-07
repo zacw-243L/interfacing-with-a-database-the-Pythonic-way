@@ -441,7 +441,7 @@ def CREATION(username, connection, cursor):
                         print("\nInvalid input. Enter a valid customer ID.\n")
                 while True:
                     PB = input("Enter customer Name: ")
-                    if re.match(r'^[a-zA-Z\s]+$', PB):
+                    if re.match(r'^[\w\u00C0-\u017F]+ [\w\u00C0-\u017F]+$', PB):
                         break
                     else:
                         print("Invalid input. Enter a valid customer name.")
@@ -1193,7 +1193,7 @@ def READING(username, connection, cursor):
         if READINGaction == 'C2':
             while True:
                 Parameter = input("Enter customer Name: ")
-                if re.match(r'^[a-zA-Z\s]+$', Parameter):
+                if re.match(r'^[\w\u00C0-\u017F]+ [\w\u00C0-\u017F]+$', Parameter):
                     break
                 else:
                     print("Invalid input. Enter a valid customer name.")
